@@ -13,7 +13,21 @@ export interface MinimalUser {
   email: string
   roles: string[]
   permissions: string[]
+  teams: TeamContext[]
   last_login_at?: OffsetDateTime
+}
+
+export interface TeamContext {
+  id: string
+  name: string
+  is_owner: boolean
+  scopes: Scope[]
+}
+
+export interface Scope {
+  resource_type: string
+  resource_id: string
+  action: string
 }
 
 export interface User extends MinimalUser {
@@ -22,6 +36,13 @@ export interface User extends MinimalUser {
   created_at: OffsetDateTime
   updated_at: OffsetDateTime
   password_hash?: string
+}
+
+export interface ScopeInput {
+  resource_type: string
+  resource_id: string
+  actions: string[]
+  resolver?: (resource_type: string, team: TeamContext) => Promise<string[]>
 }
 
 // Authentication types
@@ -34,6 +55,8 @@ export interface LoginRequest {
 export interface LoginResponse {
   user: MinimalUser
   redirect_url: string
+  authority: string
+  tenant_id: string
 }
 
 export interface ErrorResponse {

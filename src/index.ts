@@ -11,6 +11,10 @@ export type {
   SessionStatus,
   SessionChangeCallback,
 
+  // Teams
+  TeamContext,
+  Scope,
+
   // Common types
   Uuid,
   OffsetDateTime,

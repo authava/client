@@ -1,3 +1,5 @@
+import { TeamContext } from './schemas'
+
 // Re-export all schema types
 export * from './schemas'
 
@@ -16,6 +18,9 @@ export interface AuthavaConfig {
 export interface AuthavaUser {
   id: string
   email: string
+  roles: string[]
+  permissions: string[]
+  teams: TeamContext[]
   [key: string]: any
 }
 
@@ -26,6 +31,8 @@ export type AuthavaResult<T = void> =
 export interface AuthavaSession {
   user: AuthavaUser
   redirect_url: string
+  authority: string
+  tenant_id: string
 }
 
 export type SessionStatus = 'valid' | 'refreshing' | 'expired' | 'error'

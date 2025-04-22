@@ -1,6 +1,6 @@
 {
   "name": "@authava/client",
-  "version": "0.1.33",
+  "version": "0.1.40",
   "description": "Client library for seamless integration with Authava's white-label authentication service",
   "type": "module",
   "main": "dist/index.js",
@@ -53,7 +53,7 @@
     "typescript": "^5.5.2"
   },
   "engines": {
-    "node": ">=20.11.1"
+    "node": ">=16.11.1"
   },
   "overrides": {
     "glob": "^10.3.10",

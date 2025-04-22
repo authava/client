@@ -25,6 +25,9 @@ import type {
   Uuid,
   ErrorResponse,
   AuthavaResult,
+  Scope,
+  TeamContext,
+  ScopeInput,
 } from './types/index'
 
 import { AuthApi, ProfileApi, MfaApi } from './api'
@@ -91,6 +94,72 @@ export class AuthavaClient {
 
     // Perform initial session check if fetch is available
     this.checkSession()
+  }
+
+  hasRoles(roles: string[] | string): boolean {
+    if (!this.currentState.user || !Array.isArray(this.currentState.user.roles)) return false
+    const required = Array.isArray(roles) ? roles : [roles]
+    return required.every((r) => this.currentState.user!.roles.includes(r))
+  }
+
+  hasPermissions(permissions: string[] | string): boolean {
+    if (!this.currentState.user || !Array.isArray(this.currentState.user.permissions)) return false
+    const required = Array.isArray(permissions) ? permissions : [permissions]
+    return required.every((p) => this.currentState.user!.permissions.includes(p))
+  }
+
+  async hasScopes({ resource_type, resource_id, actions, resolver }: ScopeInput): Promise<boolean> {
+    const user = this.currentState.user
+    if (!user || !Array.isArray(user.teams)) return false
+
+    for (const team of user.teams as TeamContext[]) {
+      if (!Array.isArray(team.scopes)) continue
+
+      const results = await Promise.all(
+        actions.map((action) =>
+          this.teamHasMatchingScope(
+            team.scopes,
+            resource_type,
+            resource_id,
+            [action],
+            team,
+            resolver,
+          ),
+        ),
+      )
+
+      if (results.every(Boolean)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  private async teamHasMatchingScope(
+    scopes: Scope[],
+    resource_type: string,
+    resource_id: string,
+    actions: string[],
+    team: TeamContext,
+    resolver?: (resource_type: string, team: TeamContext) => Promise<string[]>,
+  ): Promise<boolean> {
+    for (const scope of scopes) {
+      if (scope.resource_type !== resource_type) continue
+      if (!actions.includes(scope.action)) continue
+      if (scope.resource_id === resource_id) return true
+      if (scope.resource_id !== '*') continue
+      if (!resolver) continue
+
+      try {
+        const allowed = await resolver(resource_type, team)
+        if (allowed.includes(resource_id)) return true
+      } catch {
+        continue
+      }
+    }
+
+    return false
   }
 
   private encodeBase64Url(input: string): string {

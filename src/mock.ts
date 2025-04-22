@@ -75,6 +75,8 @@ export class MockAuthavaClient {
       ? {
           user: this.currentState.user!,
           redirect_url: 'https://dashboard.example.com',
+          authority: 'auth.example.com',
+          tenant_id: 'mock-tenant-id',
         }
       : null
   }
@@ -149,15 +151,23 @@ export class MockAuthavaClient {
       email: data.email,
       roles: [],
       permissions: [],
+      teams: [],
       last_login_at: new Date().toISOString(),
     }
 
     const response: LoginResponse = {
       user,
       redirect_url: 'https://dashboard.example.com',
+      authority: 'auth.example.com',
+      tenant_id: 'mock-tenant-id',
     }
 
-    this.setSession({ user, redirect_url: response.redirect_url })
+    this.setSession({
+      user,
+      redirect_url: response.redirect_url,
+      authority: 'auth.example.com',
+      tenant_id: 'mock-tenant-id',
+    })
     return this.createSuccessResponse<LoginResponse>(response)
   }
 
@@ -211,15 +221,23 @@ export class MockAuthavaClient {
       email: 'mock@example.com',
       roles: [],
       permissions: [],
+      teams: [],
       last_login_at: new Date().toISOString(),
     }
 
     const response: LoginResponse = {
       user,
       redirect_url: 'https://dashboard.example.com',
+      authority: 'auth.example.com',
+      tenant_id: 'mock-tenant-id',
     }
 
-    this.setSession({ user, redirect_url: response.redirect_url })
+    this.setSession({
+      user,
+      redirect_url: response.redirect_url,
+      authority: 'auth.example.com',
+      tenant_id: 'mock-tenant-id',
+    })
     return this.createSuccessResponse<LoginResponse>(response)
   }
 
@@ -254,6 +272,7 @@ export class MockAuthavaClient {
         email_verified: true,
         roles: [],
         permissions: [],
+        teams: [],
         created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
         updated_at: new Date().toISOString(),
         last_login_at: new Date().toISOString(),
@@ -309,7 +328,12 @@ export class MockAuthavaClient {
 
     // Update session user
     const updatedUser = { ...this.currentState.user, email: data.new_email }
-    this.setSession({ user: updatedUser, redirect_url: 'https://dashboard.example.com' })
+    this.setSession({
+      user: updatedUser,
+      redirect_url: 'https://dashboard.example.com',
+      authority: 'auth.example.com',
+      tenant_id: 'mock-tenant-id',
+    })
 
     return this.createVoidSuccessResponse()
   }

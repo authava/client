@@ -34,12 +34,23 @@ export class MockAuthavaClient {
   private mockMfaMethods: MFAMethodInfo[] = []
   private mockUser: User | null = null
 
-  constructor(config?: Partial<AuthavaConfig>) {
-    this.currentState = {
-      status: 'expired',
-      user: null,
-    }
+  constructor(config?: Partial<AuthavaConfig> & { mockUser?: User }) {
     this.config = config || {}
+    this.mockUser = config?.mockUser || null
+
+    this.currentState = this.mockUser
+      ? {
+          status: 'valid',
+          user: this.mockUser,
+        }
+      : {
+          status: 'expired',
+          user: null,
+        }
+
+    if (this.mockUser) {
+      this.log('Initialized with mock user:', this.mockUser)
+    }
 
     if (config?.debug) {
       console.log('[MockAuthavaClient] Initialized')

@@ -1,6 +1,6 @@
 {
   "name": "@authava/client",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "Client library for seamless integration with Authava's white-label authentication service",
   "type": "module",
   "main": "dist/index.js",

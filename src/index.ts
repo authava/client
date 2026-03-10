@@ -1,10 +1,12 @@
 export { AuthavaClient } from './client'
+export { AuthavaAdminClient } from './admin'
 export { MockAuthavaClient } from './mock'
 
 // Export all types
 export type {
   // Client configuration types
   AuthavaConfig,
+  AuthavaAdminConfig,
   AuthavaSession,
   AuthavaUser,
   SessionState,
@@ -49,6 +51,12 @@ export type {
   UpdateNotificationPreferencesRequest,
   UserNotificationPreferences,
   UserSecurityEvent,
+
+  // Admin API types (backend-only)
+  AdminCreateUserRequest,
+  AdminCreateUserResponse,
+  AdminCreateTokenRequest,
+  AdminCreateTokenResponse,
 
   // API Error Respons
   ErrorResponse,

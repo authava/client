@@ -75,3 +75,12 @@ export interface RequestOptions {
   headers?: Record<string, string>
   credentials?: RequestCredentials
 }
+
+// Admin client configuration (backend-only, API-key auth)
+export interface AuthavaAdminConfig {
+  resolverDomain: string
+  domain: string
+  apiKey: string
+  secure?: boolean
+  debug?: boolean
+}

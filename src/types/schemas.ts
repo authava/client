@@ -139,6 +139,35 @@ export interface ProfileResponse {
   recent_security_events: UserSecurityEvent[]
 }
 
+// Admin API types (backend-only, API-key-protected)
+export interface AdminCreateUserRequest {
+  email: string
+  username?: string
+  password?: string
+  password_confirm?: string
+  roles?: string[]
+  skip_email_verification?: boolean
+  send_set_password_email?: boolean
+}
+
+export interface AdminCreateUserResponse {
+  user_id: Uuid
+  email: string
+  username?: string
+  email_verified: boolean
+  set_password_token?: string
+}
+
+export interface AdminCreateTokenRequest {
+  email?: string
+  user_id?: Uuid
+}
+
+export interface AdminCreateTokenResponse {
+  session_token: string
+  user: MinimalUser
+}
+
 export interface ChangeEmailRequest {
   new_email: string
   password: string
